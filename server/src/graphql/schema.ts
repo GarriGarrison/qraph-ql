@@ -1,5 +1,5 @@
 import { buildSchema } from 'graphql';
-import { users } from '../db/index';
+import { users, todos } from '../db/index';
 import type { ID } from 'src/types/common';
 import type { UserCreate } from 'src/types/user';
 
@@ -26,6 +26,13 @@ export const schema = buildSchema(`
     content: String
   }
 
+  type Todo {
+    id: ID
+    title: String
+    user_id: ID
+    completed: Boolean
+  }
+
   input UserInput {
     id: ID
     name: String!
@@ -42,6 +49,7 @@ export const schema = buildSchema(`
   type Query {
     getAllUsers: [User]
     getUser(id: ID): User
+    getAllTodos: [Todo]
   }
 
   type Mutation {
@@ -71,5 +79,9 @@ export const root = {
     const user = createUser(input);
     users.push(user);
     return user;
+  },
+
+  getAllTodos: () => {
+    return todos;
   },
 };
